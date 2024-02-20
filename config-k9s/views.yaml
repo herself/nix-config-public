@@ -1,0 +1,17 @@
+views:
+  v1/pods:
+    columns:
+      - NAME
+      - STATUS
+      - "%MEM/L"
+      - "%CPU/L"
+      - READY
+      - RESTARTS
+      - AGE
+  v1/nodes:
+    columns:
+      - NAME
+      - STATUS
+      - VERSION
+      - PODS
+      - AGE

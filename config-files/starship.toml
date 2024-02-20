@@ -1,0 +1,51 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+format = '''
+$character$time$kubernetes$hostname$directory$rust$package$git_branch$git_status
+ '''
+
+# Replace the '❯' symbol in the prompt with '➜'
+[character]
+disabled = false
+# success_symbol = "[󱎕](fg:blue)[](bg:blue)[](fg:blue)"
+success_symbol = "[](green)"
+error_symbol = "[✖](red)"
+vicmd_symbol = "[](blue)"
+
+[time]
+disabled = false
+format = '[$time]($style) '
+style = 'yellow'
+
+[package]
+disabled = true
+
+[git_branch]
+disabled = false
+
+[git_status]
+style = "white"
+format = '[$all_status$ahead_behind]($style) '
+
+[kubernetes]
+disabled = false
+style = "bold green"
+# symbol = "\n[☸](blue) "
+symbol = "[☸](blue) "
+format = '[$symbol$context]($style) '
+# detect_folders =	['.git']
+contexts = [
+  { context_pattern = "eks_(.*)-admin", context_alias = "$1" },
+  { context_pattern = "eks_(.*)", context_alias = "$1" },
+]
+
+[directory]
+truncate_to_repo = false
+truncation_length = 2
+truncation_symbol = '…/'
+fish_style_pwd_dir_length = 1
+style = 'white'

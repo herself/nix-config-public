@@ -1,0 +1,9 @@
+hotKeys:
+  h:
+    shortCut:    h
+    description: Namespaces
+    command:     namespaces
+  p:
+    shortCut:    p
+    description: Pods
+    command:     pods
