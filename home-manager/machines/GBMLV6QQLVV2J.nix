@@ -19,7 +19,10 @@ in {
   ];
 
   home.sessionVariables = {
+    # tfenv hack to download for arm64
     TFENV_ARCH = "arm64";
+    # old Terraform needs this
+    KUBE_CONFIG_PATH = "${homeDir}/.kube/config";
   };
 
   home.file = {
