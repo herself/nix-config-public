@@ -41,7 +41,9 @@
           hostName = "oryndoll";
         };
         # > Our main nixos configuration file <
-        modules = [./nixos/common.nix];
+        modules = [
+        ./nixos/common.nix
+        ];
       };
     };
 

@@ -6,40 +6,34 @@
   ...
 }: {
   # boot hax
-  boot.initrd.availableKernelModules = ["ahci" "usbhid"];
-  boot.initrd.kernelModules = ["dm-snapshot"];
-  boot.kernelParams = ["nomodeset"];
-  boot.kernelModules = ["kvm-amd"];
-  boot.extraModulePackages = [];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" "i915" ];
+  boot.kernelModules = [ "kvm-intel" "i915" ];
+  boot.extraModulePackages = [ ];
+  boot.loader.timeout = 1;
+  hardware.firmware = [ pkgs.linux-firmware ];
 
-  boot.loader.grub.useOSProber = true;
-  boot.loader.grub.device = "/dev/sdb";
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_6_7;
 
-  boot.loader.grub.extraEntries = ''
-    menuentry "Ubuntu" {
-      search --set=ubuntu --fs-uuid 5ecc25a3-6bc5-4d13-80e8-9666c798fbd0
-      configfile "($ubuntu)/grub/grub-ubuntu.cfg"
-    }
-  '';
+  #boot.kernelParams = ["nomodeset"];
+  boot.kernelParams = [ 
+    "i915.force_probe=46d1" 
+    #"i915.enable_guc=2"
+    "i915.enable_psr=0"
+    "i915.guc_log_level=4"
+  ];
 
-  boot.loader.grub.extraInstallCommands = ''
-    ''${pkgs.findutils}/bin/find /boot -not -path "/boot/efi/*" -type f -name '*.sig' -delete
+  #boot.initrd.extraFiles."/lib/firmware/i915/tgl_guc_70.bin".source =
+  #(
+  #  pkgs.runCommand "copy-915" { } ''
+  #      mkdir -p $out/lib/firmware/i915
+  #      cp ${../custom-files/edid/edid.bin} $out/lib/firmware/tgl_guc_70.bin
+  #    ''
+  #);
 
-    old_gpg_home=$GNUPGHOME
-
-    export GNUPGHOME="$(mktemp -d)"
-
-    ''${pkgs.gnupg}/bin/gpg --import ''${priv_key} > /dev/null 2>&1
-
-    ''${pkgs.findutils}/bin/find /boot -not -path "/boot/efi/*" -type f -exec ''${pkgs.gnupg}/bin/gpg --detach-sign "{}" \; > /dev/null 2>&1
-
-    rm -rf $GNUPGHOME
-
-    export GNUPGHOME=$old_gpg_home
-  '';
+  boot.loader.grub.useOSProber = false;
+  boot.loader.grub.device = "/dev/disk/by-id/ata-WDC_WDS120G1G0A-00SS50_164842453802";
+  boot.loader.grub.forceInstall = true;
 
   # filesystems
   fileSystems."/" = {
@@ -72,5 +66,36 @@
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  hardware.cpu.intel.updateMicrocode  = true;
+
+  #nixpkgs.config.packageOverrides = pkgs: {
+  #  intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+  #};
+
+  services.xserver.config = ''
+    Section "Device"
+      Identifier "Intel Graphics"
+      Driver "intel"
+      Option "DRI" "2"
+    EndSection
+  '';
+  services.xserver.videoDrivers = [ "intel" ];
+
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      intel-vaapi-driver
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+  };
+
+  environment.sessionVariables = { 
+    LIBVA_DRIVER_NAME = "iHD"; 
+    MESA_GL_VERSION_OVERRIDE = "4.6";
+  };
 }

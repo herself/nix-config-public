@@ -19,6 +19,14 @@ in {
     ];
   };
 
+  home.packages = [
+    # lsp stuff
+    pkgs.terraform-ls
+    pkgs.nixd
+    pkgs.yaml-language-server
+    pkgs.helm-ls
+  ];
+
   home.file = {
     # Upstream repos for mu-repo
     "${upstreamRepos}/.mu_repo".source =

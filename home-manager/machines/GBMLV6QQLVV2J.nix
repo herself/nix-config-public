@@ -6,9 +6,12 @@
 }: let
   inherit (specialArgs) user hostName homeDir homeManagerRepo upstreamRepos gitUser gitEmail;
 in {
+  imports = [../roles/latex.nix];
+
   home.packages = [
     # GNU utils
     pkgs.gnused
+    pkgs.openssl
 
     # container runtimes
     pkgs.colima

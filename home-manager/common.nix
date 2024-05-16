@@ -40,7 +40,9 @@ in {
     # utils
     pkgs.eza
     pkgs.jq
+    pkgs.yq-go
     pkgs.fd
+    pkgs.tig
     pkgs.git-secrets
     pkgs.git-filter-repo
     pkgs.nix-search-cli
@@ -48,6 +50,7 @@ in {
     pkgs.nvd
     pkgs.mu-repo
     pkgs.difftastic
+    pkgs.shellcheck
 
     # kubernetes stuff
     pkgs.kubectl
@@ -60,13 +63,10 @@ in {
 
     # cloud stuff
     pkgs.awscli2
+    pkgs.aws-nuke
     pkgs.ssm-session-manager-plugin
     pkgs.tfenv
     pkgs.terragrunt
-
-    # lsp stuff
-    pkgs.terraform-ls
-    pkgs.nixd
 
     # others
     pkgs.postgresql_14
@@ -85,6 +85,7 @@ in {
         python-lsp-server
         libtmux
         python-dateutil
+        pytest
       ]))
 
     # fonts

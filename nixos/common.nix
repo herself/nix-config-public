@@ -8,9 +8,6 @@
     machines/${specialArgs.hostName}.nix
   ];
 
-  # boot splash
-  # boot.plymouth.enable = true;
-
   # locale
   time.timeZone = "Europe/Lisbon";
   i18n.defaultLocale = "en_GB.UTF-8";
@@ -51,6 +48,10 @@
     vim
     git
     home-manager
+    pciutils
+    libva-utils
+    htop
+    linux-firmware
   ];
 
   services.openssh.enable = true;

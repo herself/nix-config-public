@@ -57,6 +57,12 @@ local plugins = {
     lazy = false
   },
 
+  {
+    "tpope/vim-fugitive",
+    lazy = false
+  },
+
+
   -- Disable
   {
     "windwp/nvim-autopairs",

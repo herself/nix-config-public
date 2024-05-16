@@ -3,7 +3,7 @@
 # alt - l : expr $(~/bin/yabai -m query --windows --window | jq .frame.x) \< 20 && ~/bin/yabai -m window --resize right:60:0 || ~/bin/yabai -m window --resize left:60:0
 
 # change layout of desktop
-alt - o : ~/bin/aerospace workspace $(~/bin/aerospace list-workspaces --monitor 2 --visible)
-alt - i : ~/bin/aerospace workspace $(~/bin/aerospace list-workspaces --monitor 1 --visible)
+alt - o : ~/bin/aerospace workspace $(~/bin/aerospace list-workspaces --monitor 2 --visible | head -n 1)
+alt - i : ~/bin/aerospace workspace $(~/bin/aerospace list-workspaces --monitor 1 --visible | head -n 1)
 
 cmd + shift - s : sleep 1; pmset sleepnow

@@ -11,6 +11,10 @@
     jellyfin-web
     jellyfin-ffmpeg
     x11vnc
+    # debug purposes...
+    glxinfo
+    vlc
+    mplayer
   ];
   networking.firewall.allowedTCPPorts = [5900];
 

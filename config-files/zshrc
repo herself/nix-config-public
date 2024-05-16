@@ -51,9 +51,10 @@ export LS_COLORS=$(vivid generate jellybeans)
 
 # alias time
 alias ls="eza"
-alias lltr="eza -l -s modified"
-alias ll="eza -lbGF --git"
+alias lltr="eza -lbhF -s modified"
+alias ll="eza -lbhF --git"
 alias gco="git branch -vv --sort=-committerdate | sed 's/* //g;s/^ *//g' | fzf --height=50% --info=inline | awk '{ print \$1 }' | xargs git checkout"
+alias rg="rg --hidden --glob '!.git'"
 
 # a terminal without a fortune is just sad
 fortune-kind
