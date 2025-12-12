@@ -3,11 +3,19 @@ views:
     columns:
       - NAME
       - STATUS
-      - "%MEM/L"
-      - "%CPU/L"
       - READY
       - RESTARTS
+      - LAST RESTART|W
       - AGE
+      - CPU/RL|S
+      - MEM/RL|S
+      - "%MEM/R"
+      - "%CPU/R"
+      - CPU
+      - MEM
+      - PF|H
+      - "%MEM/L|H"
+      - "%CPU/L|H"
   v1/nodes:
     columns:
       - NAME

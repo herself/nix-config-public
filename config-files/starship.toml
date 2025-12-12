@@ -5,7 +5,7 @@
 add_newline = true
 
 format = '''
-$character$time$kubernetes$hostname$directory$rust$package$git_branch$git_status
+$character$time$python$kubernetes$hostname$directory$rust$package$git_branch$git_status
  '''
 
 # Replace the '❯' symbol in the prompt with '➜'
@@ -26,6 +26,12 @@ disabled = true
 
 [git_branch]
 disabled = false
+
+[python]
+disabled = false
+style = "green"
+version_format = "v${major}.${minor}"
+symbol = " "
 
 [git_status]
 style = "white"

@@ -13,9 +13,13 @@ in {
   imports = [
     ./machines/${hostName}.nix
     ./roles/git.nix
+    ./roles/ssh.nix
     ./roles/tmux.nix
     ./roles/neovim.nix
   ];
+
+  # Allow unfree packages (needed for claude-code and others)
+  nixpkgs.config.allowUnfree = true;
 
   home.username = user;
   home.homeDirectory = homeDir;
@@ -25,75 +29,101 @@ in {
   # release notes.
   home.stateVersion = "23.11"; # Please read the comment before changing.
 
+  # Make home-manager manage nix packages
+  nix.package = pkgs.nix;
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
+    # Make home-manager manage nix packages, part 2
+    config.nix.package
+
     # shell stuff
-    pkgs.starship
-    pkgs.fzf
-    pkgs.zoxide
     pkgs.fortune-kind
-    pkgs.ripgrep
-    pkgs.vivid
+    pkgs.fzf
     pkgs.htop
+    pkgs.ripgrep
+    pkgs.starship
+    pkgs.vivid
+    pkgs.zoxide
+    pkgs.bash-language-server
 
     # utils
-    pkgs.eza
-    pkgs.jq
-    pkgs.yq-go
-    pkgs.fd
-    pkgs.tig
-    pkgs.git-secrets
-    pkgs.git-filter-repo
-    pkgs.nix-search-cli
-    pkgs.nix-diff
-    pkgs.nvd
-    pkgs.mu-repo
     pkgs.difftastic
+    pkgs.dust
+    pkgs.eza
+    pkgs.fd
+    pkgs.git-filter-repo
+    pkgs.git-secrets
+    # pkgs.ipcalc
+    pkgs.jq
+    pkgs.mu-repo
+    pkgs.ncdu
+    pkgs.nix-diff
+    pkgs.nix-search-cli
+    pkgs.nvd
+    pkgs.poppler-utils
+    pkgs.pwgen
+    pkgs.ranger
     pkgs.shellcheck
+    pkgs.tig
+    pkgs.yq-go
+
+    # llm
+    pkgs.code2prompt
+    (pkgs.llm.withPlugins {
+      llm-ollama = true;
+    })
 
     # kubernetes stuff
-    pkgs.kubectl
+    pkgs.argocd
+    pkgs.helmfile
     pkgs.k9s
+    pkgs.kubectl
     pkgs.kubectx
+    pkgs.kubernetes-helm
     pkgs.stern
     pkgs.yor
-    pkgs.kubernetes-helm
-    pkgs.argocd
 
     # cloud stuff
-    pkgs.awscli2
     pkgs.aws-nuke
+    pkgs.awscli2
+    pkgs.backblaze-b2
     pkgs.ssm-session-manager-plugin
-    pkgs.tfenv
     pkgs.terragrunt
+    pkgs.tfenv
 
     # others
-    pkgs.postgresql_14
-    pkgs.ffmpeg
     pkgs.alejandra
-
-    # python 3.13 and packages
-    (pkgs.python311.withPackages (p:
-      with p; [
-        pip
-        ipython
-        virtualenv
-        requests
-        # openai
-        poetry-core
-        python-lsp-server
-        libtmux
-        python-dateutil
-        pytest
-      ]))
+    pkgs.ffmpeg
+    pkgs.postgresql_14
+    pkgs.libpq
+    pkgs.libpq.pg_config
+    # pkgs.neofetch
+    pkgs.nmap
+    pkgs.lua
+    pkgs.graphviz-nox
 
     # fonts
-    (
-      pkgs.nerdfonts.override {
-        fonts = ["Lilex"];
-      }
-    )
+    pkgs.nerd-fonts.lilex
+
+    # python 3.13 and packages
+    (pkgs.python312.withPackages (p:
+      with p; [
+        ipython
+        ansible-core
+        libtmux
+        msgpack
+        pip
+        poetry-core
+        pyserial
+        pytest
+        python-dateutil
+        python-lsp-server
+        requests
+        uv
+        virtualenv
+      ]))
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -131,6 +161,10 @@ in {
     # Upstream repos for mu-repo
     "${upstreamRepos}/.mu_repo".source =
       config.lib.file.mkOutOfStoreSymlink "${homeManagerRepo}/config-files/upstreams-mu_repo";
+
+    # Nix config
+    ".config/nix/nix.conf".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerRepo}/config-files/nix.conf";
 
     # Shell
     ".zshrc".source =

@@ -4,15 +4,27 @@
   specialArgs,
   ...
 }: let
+  # Pin tmux to 3.5 for compatibility with tmux-fingers
+  tmux35-pkgs = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/b5b2fecd0cadd82ef107c9583018f381ae70f222.tar.gz";
+    sha256 = "0bj1mjz2m4m5ns7c0cxxvraw0rc84cd172pv6vyqrgiw7ld339lk";
+  }) {
+    system = pkgs.system;
+  };
 in {
   programs.tmux = {
     enable = true;
+    package = tmux35-pkgs.tmux;
     baseIndex = 1;
     historyLimit = 100000;
     keyMode = "vi";
     mouse = true;
     prefix = "C-a";
     terminal = "tmux-256color";
+
+    # turn off sensible which fucks up login shells on macOS
+    sensibleOnTop = false;
+
     plugins = with pkgs; [
       # window names that make sense
       {
@@ -31,26 +43,22 @@ in {
 
         extraConfig = ''
           set -g @tmux_window_name_use_tilde "True"
-          set -g @tmux_window_dir_programs "['nvim', 'vim', 'vi', 'git']"
-          set -g @tmux_window_name_substitute_sets "[('.*?/.nix-profile/bin/(.+)', '\\g<1>'), ('m --cmd lua.*', 'm')]"
+          set -g @tmux_window_dir_programs "['git']"
+          set -g @tmux_window_name_substitute_sets "[('/nix/store/[^/]+-([^/]+)/bin/(.+)', '\\g<2>'), ('.*?/.nix-profile/bin/(.+)', '\\g<1>'), ('m --cmd lua.*', 'm')]"
         '';
       }
       # prefix-u for opening files
       {
-        plugin =
-          pkgs.tmuxPlugins.mkTmuxPlugin
-          {
-            pluginName = "tmux-super-fingers";
-            version = "unstable-2023-01-06";
-            src = pkgs.fetchFromGitHub {
-              owner = "artemave";
-              repo = "tmux_super_fingers";
-              rev = "2c12044984124e74e21a5a87d00f844083e4bdf7";
-              sha256 = "sha256-cPZCV8xk9QpU49/7H8iGhQYK6JwWjviL29eWabuqruc=";
-            };
-          };
-
-        extraConfig = "set -g @super-fingers-key u";
+        plugin = tmuxPlugins.fingers;
+        extraConfig = ''
+          set -g @fingers-main-action ':open:'
+          set -g @fingers-key 'u'
+          set -g @fingers-backdrop-style 'fg=colour242'
+          set -g @fingers-highlight-style 'fg=colour11'
+          set -g @fingers-hint-style 'fg=colour12,bold'
+          set -g @fingers-hint-position 'left'
+          set -g @fingers-keyboard-layout 'qwerty-right-hand'
+        '';
       }
       # theme
       {

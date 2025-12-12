@@ -7,3 +7,7 @@ hotKeys:
     shortCut:    p
     description: Pods
     command:     pods
+  shift-h:
+    shortCut:    Shift-H
+    description: Contexts
+    command:     ctx

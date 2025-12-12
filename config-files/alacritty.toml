@@ -34,7 +34,7 @@ background = "#272730"
 foreground = "#ffffff"
 
 [font]
-size = 16
+size = 12
 
 [font.normal]
 family = "Lilex Nerd Font Propo"
@@ -76,9 +76,9 @@ key = "U"
 mods = "Alt|Shift"
 
 [window]
-opacity = 0.85
+opacity = 0.90
 blur = true
-decorations = "Buttonless"
+decorations = "None"
 
 [window.padding]
 x = 2

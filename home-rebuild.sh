@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 echo "Running home-manager switch --flake .#$(whoami)@$(hostname)..."
-home-manager switch --flake ".#$(whoami)@$(hostname)" --extra-experimental-features nix-command --extra-experimental-features flakes
+home-manager switch --flake ".#$(whoami)@$(hostname)"
 
 if [[ $? -ne 0 ]]; then
   exit 1;

@@ -6,18 +6,18 @@
   ...
 }: {
   # boot hax
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" "i915" ];
-  boot.kernelModules = [ "kvm-intel" "i915" ];
-  boot.extraModulePackages = [ ];
+  boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "usbhid" "sd_mod"];
+  boot.initrd.kernelModules = ["dm-snapshot" "i915"];
+  boot.kernelModules = ["kvm-intel" "i915"];
+  boot.extraModulePackages = [];
   boot.loader.timeout = 1;
-  hardware.firmware = [ pkgs.linux-firmware ];
+  hardware.firmware = [pkgs.linux-firmware];
 
   boot.kernelPackages = pkgs.linuxPackages_6_7;
 
   #boot.kernelParams = ["nomodeset"];
-  boot.kernelParams = [ 
-    "i915.force_probe=46d1" 
+  boot.kernelParams = [
+    "i915.force_probe=46d1"
     #"i915.enable_guc=2"
     "i915.enable_psr=0"
     "i915.guc_log_level=4"
@@ -67,7 +67,7 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-  hardware.cpu.intel.updateMicrocode  = true;
+  hardware.cpu.intel.updateMicrocode = true;
 
   #nixpkgs.config.packageOverrides = pkgs: {
   #  intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
@@ -80,7 +80,7 @@
       Option "DRI" "2"
     EndSection
   '';
-  services.xserver.videoDrivers = [ "intel" ];
+  services.xserver.videoDrivers = ["intel"];
 
   hardware.opengl = {
     enable = true;
@@ -94,8 +94,8 @@
     ];
   };
 
-  environment.sessionVariables = { 
-    LIBVA_DRIVER_NAME = "iHD"; 
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
     MESA_GL_VERSION_OVERRIDE = "4.6";
   };
 }

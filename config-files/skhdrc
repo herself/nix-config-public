@@ -6,4 +6,6 @@
 alt - o : ~/bin/aerospace workspace $(~/bin/aerospace list-workspaces --monitor 2 --visible | head -n 1)
 alt - i : ~/bin/aerospace workspace $(~/bin/aerospace list-workspaces --monitor 1 --visible | head -n 1)
 
+alt - w : ~/bin/scratchpad_spotify.sh
+
 cmd + shift - s : sleep 1; pmset sleepnow

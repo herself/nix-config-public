@@ -1,28 +1,44 @@
-local opt = vim.opt
+vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
+vim.g.mapleader = " "
 
-opt.number = true
-opt.relativenumber = true               -- show relative line numbers for jumping
-opt.clipboard = ""                      -- go back to default vim copy/paste behaviour
-opt.whichwrap = ""                      -- don't go to next line when using left/right in the beggining
+vim.opt.expandtab = true      -- convert tabs to spaces
+vim.opt.shiftwidth = 2        -- number of spaces for autoindent
+vim.opt.tabstop = 2           -- number of visual spaces per tab
+vim.opt.softtabstop = 2       -- number of spaces inserted per tab
+vim.opt.smartindent = true    -- smart autoindenting
 
-opt.undofile = true                     -- track undos
-opt.undodir = vim.fn.expand('$HOME/.vim/undo') -- undo directory
-opt.undolevels = 1000                   -- maximum number of changes that can be undone
-opt.undoreload = 10000                  -- maximum number lines to save for undo on a buffer reload
+-- bootstrap lazy and all plugins
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
-if vim.g.neovide then
-  vim.o.guifont = "Lilex Nerd Font Propo:h16"
-  vim.g.neovide_cursor_vfx_mode = "railgun"
-  vim.g.neovide_input_macos_alt_is_meta = true
-
-  -- Allow clipboard copy paste in neovim
-  vim.g.neovide_input_use_logo = 1
-  vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true})
-  vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-  vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-  vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-else
-  opt.mouse = ""                          -- don't use mouse at all
+if not vim.uv.fs_stat(lazypath) then
+  local repo = "https://github.com/folke/lazy.nvim.git"
+  vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
 end
 
-vim.g.nvimtree_side = "right"
+vim.opt.rtp:prepend(lazypath)
+
+local lazy_config = require "configs.lazy"
+
+-- load plugins
+require("lazy").setup({
+  {
+    "NvChad/NvChad",
+    lazy = false,
+    branch = "v2.5",
+    import = "nvchad.plugins",
+  },
+
+  { import = "plugins" },
+}, lazy_config)
+
+-- load theme
+dofile(vim.g.base46_cache .. "defaults")
+dofile(vim.g.base46_cache .. "statusline")
+
+require "options"
+require "nvchad.autocmds"
+
+vim.schedule(function()
+  require "mappings"
+end)
+require 'myinit'

@@ -3,7 +3,7 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
@@ -42,7 +42,7 @@
         };
         # > Our main nixos configuration file <
         modules = [
-        ./nixos/common.nix
+          ./nixos/common.nix
         ];
       };
     };
@@ -66,7 +66,7 @@
         user = "wieslaw";
         homeDir = "/home/wieslaw";
         gitUser = "Wiesław Herr";
-        gitEmail = "wieslaw.herr@evilcorp.com";
+        gitEmail = "wieslaw.herr@amlrightsource.com";
         homeManagerRepo = "/home/wieslaw/GIT_REPOS/Private/nix-config";
         upstreamRepos = "/home/wieslaw/GIT_REPOS/Upstreams";
       };
@@ -101,6 +101,14 @@
           inherit inputs outputs;
           inherit (extraSpecialArgsPrivate) user homeDir gitUser gitEmail homeManagerRepo upstreamRepos;
           hostName = "silverymoon";
+        };
+      };
+      "herself@silverymoon-wsl" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs modules;
+        extraSpecialArgs = {
+          inherit inputs outputs;
+          inherit (extraSpecialArgsPrivate) user homeDir gitUser gitEmail homeManagerRepo upstreamRepos;
+          hostName = "silverymoon-wsl";
         };
       };
       "wieslawherr@GBMLV6QQLVV2J" = home-manager.lib.homeManagerConfiguration {

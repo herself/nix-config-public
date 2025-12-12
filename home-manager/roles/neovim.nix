@@ -20,11 +20,21 @@ in {
   };
 
   home.packages = [
-    # lsp stuff
     pkgs.terraform-ls
     pkgs.nixd
+
     pkgs.yaml-language-server
     pkgs.helm-ls
+    # imported by haskell.nix for version compat
+    # pkgs.haskell-language-server
+    # pkgs.ormolu
+
+    pkgs.bash-language-server
+    pkgs.vscode-langservers-extracted
+
+    pkgs.lua-language-server
+    pkgs.luarocks
+    pkgs.stylua
   ];
 
   home.file = {
@@ -33,9 +43,7 @@ in {
       config.lib.file.mkOutOfStoreSymlink "${homeManagerRepo}/config-files/upstreams-mu_repo";
 
     # NvChad
-    "${upstreamRepos}/nvchad/lua/custom".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerRepo}/config-nvchad";
     ".config/nvim".source =
-      config.lib.file.mkOutOfStoreSymlink "${upstreamRepos}/nvchad";
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerRepo}/config-nvchad";
   };
 }
